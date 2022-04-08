@@ -1,0 +1,28 @@
+.character-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55px;
+    min-width: 55px;
+    margin: 5px;
+    border: 1px solid black;
+    color: black;
+    font-size: 32px;
+    font-family: "Impact";
+}
+
+.white-background {
+    background-color: white;
+}
+
+.gray-background {
+    background-color: gray;
+}
+
+.yellow-background {
+    background-color: yellow;
+}
+
+.green-background {
+    background-color: green;
+}
