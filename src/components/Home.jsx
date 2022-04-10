@@ -43,7 +43,7 @@ export default function Home() {
             <div className="difficulty-button-container">
                 <button id="easy-button" 
                         className={difficulty === Difficulty.EASY ? "button selected-button" : "button"} 
-                        onClick={() => setNewDifficulty(Difficulty.EASY, "easy-button")} outline>
+                        onClick={() => setNewDifficulty(Difficulty.EASY, "easy-button")}>
                     Easy
                 </button>
                 <button id="medium-button" 
@@ -61,7 +61,7 @@ export default function Home() {
                 <Link to="/rules">
                     <button className="button route-button">Rules</button>
                 </Link>
-                <Link to={"/game?difficulty=" + difficulty}>
+                <Link to={"/game?difficulty=" + difficulty.toString()}>
                     <button className="button route-button" onClick={handleStartNewGame}>Start New Game</button>
                 </Link>
             </div>

@@ -2,8 +2,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 55px;
-    min-width: 55px;
+    min-height: 50px;
+    min-width: 50px;
     margin: 5px;
     border: 1px solid black;
     color: black;
@@ -25,4 +25,20 @@
 
 .green-background {
     background-color: green;
+}
+
+@media(max-width: 550px) {
+    .character-container {
+        min-height: 35px;
+        min-width: 35px;
+        font-size: 26px;
+    }
+}
+
+@media(max-width: 350px) {
+    .character-container {
+        min-height: 30px;
+        min-width: 30px;
+        font-size: 22px;
+    }
 }

@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 
-export const ViewState = {
-    RULES: 0,
-    GAME: 1,
-}
-
 export const Difficulty = {
     EASY: 0,
     MEDIUM: 1,
@@ -12,7 +7,6 @@ export const Difficulty = {
 };
 
 export const DefaultGameState = {
-    viewState: ViewState.GAME,
     difficulty: Difficulty.EASY,
     currentWord: '',
     currentGuesses: Array(7).fill('')
@@ -37,6 +31,7 @@ export function difficultyToWordLength(difficulty) {
         case Difficulty.MEDIUM:
             return 6;
         default:
+            // Default to easy difficulty
             return 7;
     }
 }
