@@ -109,10 +109,13 @@ export default function Game() {
         if (inputValue.length !== difficultyToWordLength(difficulty)) {
             setSnackbarMessage("Error: Guesses must be " + difficultyToWordLength(difficulty) + " characters long");
             setSnackbarOpen(true);
-        } else {
+        } else if (currentIndex < difficultyToGuesses(difficulty)) {
             calculateGuessBackground();
             setCurrentIndex(currentIndex + 1);
             setInputValue("");
+        } else {
+            setInputValue("");
+            setDisableInput(true);
         }
     }
 
