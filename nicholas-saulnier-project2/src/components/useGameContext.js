@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { Difficulty, GameContext, ViewState } from './Provider';
+import { Difficulty, GameContext } from './Provider';
 import { EASY_WORDS } from '../data/easyWordBank';
 import { MEDIUM_WORDS } from '../data/mediumWordBank';
 import { HARD_WORDS } from '../data/hardWordBank';
@@ -13,21 +13,6 @@ function getRandomInt(max) {
 // Source: https://javascript.plainenglish.io/react-context-patterns-with-usecontext-hook-62085b90c7eb
 export default function useGameContext() {
     const [state, updateState] = useContext(GameContext);
-
-    function updateViewState(viewState) {
-        const newState = {...state}; 
-        switch (viewState) {
-            case ViewState.RULES:
-                newState.viewState = ViewState.RULES;
-                break;
-            case ViewState.GAME:
-                newState.viewState = ViewState.GAME;
-                break;
-            default:
-                // Take no action
-        }
-        updateState(newState);
-    }
 
     function updateDifficulty(difficulty) {
         const newState = {...state};
@@ -67,7 +52,6 @@ export default function useGameContext() {
 
     return {
         ...state,
-        updateViewState,
         updateDifficulty,
         updateCurrentWord,
     };

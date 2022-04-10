@@ -44,3 +44,69 @@
     font-size: 20px;
     width: 275px;
 }
+
+@media(max-width: 650px) {
+    .main-header {
+        font-size: 72px;
+    }
+
+    .sub-header {
+        font-size: 42px;
+        margin-top: 20px;
+        margin-bottom: -40px;
+    }
+
+    .route-button-container {
+        width: 450px;
+        margin-top: 50px;
+    }
+
+    .route-button {
+        font-size: 18px;
+        width: 200px;
+    }
+}
+
+@media(max-width: 500px) {
+    .main-header {
+        font-size: 66px;
+    }
+
+    .sub-header {
+        font-size: 36px;
+        margin-top: 20px;
+        margin-bottom: -50px;
+    }
+
+    .route-button-container {
+        width: 350px;
+        margin-top: 40px;
+    }
+
+    .route-button {
+        font-size: 16px;
+        width: 150px;
+    }
+}
+
+@media(max-width: 400px) {
+    .main-header {
+        font-size: 54px;
+    }
+
+    .sub-header {
+        font-size: 32px;
+        margin-top: 15px;
+        margin-bottom: -60px;
+    }
+
+    .route-button-container {
+        width: 300px;
+        margin-top: 30px;
+    }
+
+    .route-button {
+        font-size: 14px;
+        width: 140px;
+    }
+}

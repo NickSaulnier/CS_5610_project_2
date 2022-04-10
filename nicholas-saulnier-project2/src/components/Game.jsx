@@ -4,6 +4,7 @@ import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 
+import EndGameDialog from './EndGameDialog';
 import GuessContainer from './GuessContainer';
 import useGameContext from './useGameContext';
 import { Difficulty, difficultyToGuesses, difficultyToWordLength } from './Provider';
@@ -37,10 +38,12 @@ function getCurrentWordCharacterCounts(currentWord) {
     return counts;
 }
 
-const WHITE_BACKGROUND = 'white-background';
-const GRAY_BACKGROUND = 'gray-background';
-const YELLOW_BACKGROUND = 'yellow-background';
-const GREEN_BACKGROUND = 'green-background';
+export const BACKGROUNDS = {
+    WHITE_BACKGROUND: 'white-background',
+    GRAY_BACKGROUND: 'gray-background',
+    YELLOW_BACKGROUND: 'yellow-background',
+    GREEN_BACKGROUND: 'green-background'
+};
 
 export default function Game() {
     const { currentWord, difficulty, updateCurrentWord, updateDifficulty } = useGameContext();
@@ -49,10 +52,12 @@ export default function Game() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [currentGuesses, setCurrentGuesses] = useState(Array(difficultyToGuesses(difficulty)).fill(''));
     const [currentBackgrounds, setCurrentBackgrounds] = useState(
-        Array(difficultyToGuesses(difficulty)).fill(Array(difficultyToWordLength(difficulty)).fill(WHITE_BACKGROUND))
+        Array(difficultyToGuesses(difficulty)).fill(Array(difficultyToWordLength(difficulty)).fill(BACKGROUNDS.WHITE_BACKGROUND))
     );
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [disableInput, setDisableInput] = useState(false);
 
     function handleInputChange(event) {
         const newInputValue = event.target.value;
@@ -60,6 +65,10 @@ export default function Game() {
         const newCurrentGuesses = [...currentGuesses];
         newCurrentGuesses[currentIndex] = newInputValue;
         setCurrentGuesses(newCurrentGuesses);
+    }
+
+    function checkForWin(colors) {
+        return colors.every(color => color === BACKGROUNDS.GREEN_BACKGROUND);
     }
 
     function calculateGuessBackground() {
@@ -75,19 +84,25 @@ export default function Game() {
             }
 
             if (currentWord[index] === char) {
-                guessBackgrounds.push(GREEN_BACKGROUND);
+                guessBackgrounds.push(BACKGROUNDS.GREEN_BACKGROUND);
             } else if (
                 currentWordCharacterCounts.hasOwnProperty(char) 
                 && currentGuessCharacterCounts[char] <= currentWordCharacterCounts[char]) {
-                guessBackgrounds.push(YELLOW_BACKGROUND);
+                guessBackgrounds.push(BACKGROUNDS.YELLOW_BACKGROUND);
             } else {
-                guessBackgrounds.push(GRAY_BACKGROUND);
+                guessBackgrounds.push(BACKGROUNDS.GRAY_BACKGROUND);
             }
         });
 
         const newCurrentBackgrounds = [...currentBackgrounds];
         newCurrentBackgrounds[currentIndex] = guessBackgrounds;
         setCurrentBackgrounds(newCurrentBackgrounds);
+
+        if (checkForWin(newCurrentBackgrounds[currentIndex])) {
+            // Open the congratulations dialog if the user wins
+            setDisableInput(true);
+            setDialogOpen(true);
+        }
     }
 
     function handleSubmit() {
@@ -103,6 +118,21 @@ export default function Game() {
 
     function handleSnackbarClose() {
         setSnackbarOpen(false);
+    }
+
+    function handleResetWord() {
+        updateCurrentWord()
+        setInputValue("");
+        setCurrentIndex(0);
+        setCurrentGuesses(Array(difficultyToGuesses(difficulty)).fill(''));
+        setCurrentBackgrounds(
+            Array(difficultyToGuesses(difficulty)).fill(Array(difficultyToWordLength(difficulty)).fill(BACKGROUNDS.WHITE_BACKGROUND))
+        );
+        setDisableInput(false);
+    }
+
+    function closeDialog() {
+        setDialogOpen(false);
     }
 
     // Ensure that the set difficulty matches any valid difficulty params, and that
@@ -123,11 +153,14 @@ export default function Game() {
         }
     }, [difficulty, updateCurrentWord, currentWord.length])
 
+    // For ease of verifying functionality, I've left this in
+    console.log(currentWord);
+
     return(
         <div id='game-container'>
             <div id='input-container'>
-                <TextField label="Guess" value={inputValue} onChange={handleInputChange}></TextField>
-                <button className="button margin-left-ten-px medium-button-font-size" onClick={handleSubmit}>Submit</button>
+                <TextField label="Guess" value={inputValue} onChange={handleInputChange} disabled={disableInput}></TextField>
+                <button className="button margin-left medium-button-font-size" onClick={handleSubmit} disabled={disableInput}>Submit</button>
             </div>
             {
                 currentGuesses.map((guess, index) => (
@@ -141,11 +174,13 @@ export default function Game() {
             <Snackbar open={snackbarOpen} 
                       autoHideDuration={AUTO_HIDE_DURATION} 
                       onClose={handleSnackbarClose} 
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} >
+                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
                 <Alert severity="error" sx={{ width: '100%' }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
+            <button className="button margin-10" onClick={handleResetWord}>Reset</button>
+            <EndGameDialog open={dialogOpen} resetWord={handleResetWord} close={closeDialog}></EndGameDialog>
         </div>
     );
 }
